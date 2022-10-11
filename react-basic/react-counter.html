@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>리액트 카운터 만들기</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <!-- Babel 컴파일 -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- 스크립트의 타입을 "text/babel"로 하면 babel에서 컴파일링한다. -->
+  <script type="text/babel">
+    // 첫번째 : 렌더링할 위치 가져오기
+    const root = document.getElementById("root");
+
+    // 두번째 : 태그 생성하기
+    // React.createElement(HTML TagName, Property, children(include content))
+
+    // JSX 사용시 - babel의 컴파일링이 필요하다. babel이 컴파일을 끝나면 React.createElement 형태로 코드를 컴파일링한다.
+    // 함수형 컴포넌트
+    const Title = () => {
+      return (
+        <h3 id="title" onMouseEnter={() => console.log("I'm MouseEntered")}>
+          Hello I'm a h3
+        </h3>
+      );
+    };
+
+    const Button = () => {
+      return (
+        <button
+          style={{ backgroundColor: "tomato" }}
+          onClick={() => console.log("I'm clicked")}>
+          Click me
+        </button>
+      );
+    };
+
+    // 컴포넌트 형태로 컨테이너 요소에 넣기
+    const Container = () => {
+      return (
+        <div>
+          <Title />
+          <Button />
+        </div>
+      );
+    };
+
+    // React.createElement 사용 시
+    /*
+    const h3 = React.createElement(
+      "h3",
+      {
+        id: "title",
+        onMouseEnter: () => {
+          console.log("I'm Mouse Entered");
+        },
+      },
+      "Hello I'm a h3"
+    );
+
+    const btn = React.createElement(
+      "button",
+      {
+        onClick: () => {
+          console.log("I'm clicked");
+        },
+        style: {
+          backgroundColor: "tomato",
+        },
+      },
+      "Click me"
+    );
+
+    const container = React.createElement("div", null, [Title, Button]);
+    */
+
+    // 세번째 : 생성한 태그를 렌더링하기
+    ReactDOM.render(<Container />, root);
+
+    // 리액트는 바닐라 자바스크립트와 다르게 자바스크립트에서 시작하여 HTML의 방향으로 동작한다.
+    // 이것은 리액트는 유저에게 보여줄 내용을 컨트롤할 수 있다는 것이 강점이다.
+  </script>
+</html>

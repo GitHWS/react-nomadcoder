@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Memo</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // 전달받은 props는 반드시 모든 property를 담은 하나의 객체나 property를 비구조화 할당을 통해 사용해야함.
+    function Btn({ text, onClick }) {
+      // memo를 적용하여 Continue버튼은 재랜더링이 되지 않음.
+      console.log(text, "was rendered ");
+      return (
+        <button
+          onClick={onClick}
+          style={{
+            backgroundColor: "tomato",
+            color: "white",
+            padding: "10px 20px ",
+            border: 0,
+            borderRadius: 10,
+            cursor: "pointer",
+          }}>
+          {text}
+        </button>
+      );
+    }
+    // Btn 컴포넌트에 전달된 props가 바뀌지 않는 한 memo로 인해 재랜더링이 이루어지지 않음.
+    const MemorizeBtn = React.memo(Btn);
+
+    function App() {
+      const [value, setValue] = React.useState("Save Changes");
+
+      const changeValue = () => {
+        setValue("Revert Changes");
+      };
+
+      return (
+        <div>
+          {/* ⭐️ 커스텀 컴포넌트는 이벤트 리스너를 해당 컴포넌트의 "props"로서 전달만 할 뿐 호출하지 않음. */}
+          {/* 즉, 해당 커스텀 컴포넌트에서 직접 props로 적용 후 이벤트 호출 가능 */}
+          <MemorizeBtn text={value} onClick={changeValue} />
+          {/* Continue 버튼은 업데이트가 되지않았음에도 불구하고 App 컴포넌트 안의 state가 변경됨에 따라 같이 리렌더링이 이루어짐. 하지만 이것은 추후에 애플리케이션의 성능 저하를 야기하는 불필요한 렌더링임. */}
+          {/* "props"가 변경되지 않는 한(연결된 state가 변경되지 않는 한) 해당 컴포넌트를 다시 렌더링할지 안할지 결정하는 기능이 React에 있는데 그것이 "memo"임. */}
+          {/* memo를 적용한 변수명을 컴포넌트명으로 붙여주면 됨. */}
+          <MemorizeBtn text={"Continue"} />
+        </div>
+      );
+    }
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+  </script>
+</html>

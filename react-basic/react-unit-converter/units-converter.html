@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>state를 사용하여 단위 변환기 만들기</title>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+  <!--  React18버전에서 production cdn을 development cdn으로 변경하면 react-dom이 정의되지 않는다는 에러가 발생함 -->
+  <!-- 그래서 현재는 React18버전이지만 강의에서 17버전을 사용하기 때문에 17버전으로 설정 -->
+  <!-- cdn에서 development와 production가 있는데 이는 개발모드와 배포모드라는 의미임 -->
+  <!-- 즉 배포모드에서는 버그로 이어질 수 있는 요소에 대한 경고 메세지가 나오지 않으나 개발자 모드에서는 경고 메세지가 출력됨 -->
+  <!-- https://ui.toast.com/weekly-pick/ko_20191212 내용 참고하기 -->
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // label의 속성 for나 class같은 속성은 자바스크립트에서 예약어로 이미 선점이 되었기 때문에 사용할 수 없다는 콘솔의 경고 메세지가 출력됨
+    // 대신 for는 "htmlFor"로, class는 "className"으로 동일한 역할로서 사용할 수 있음
+
+    function MinutesToHours() {
+      const [amount, setAmount] = React.useState(0);
+      const [inverted, setInverted] = React.useState(false);
+
+      const onChange = (event) => {
+        setAmount(event.target.value);
+      };
+
+      const reset = () => {
+        setAmount(0);
+      };
+
+      const onInvert = () => {
+        reset();
+        setInverted((current) => !current);
+      };
+
+      return (
+        <div>
+          <div>
+            <label htmlFor="minutes">Minutes</label>
+            <input
+              id="minutes"
+              value={inverted ? amount * 60 : amount}
+              placeholder="Minutes"
+              type="number"
+              onChange={onChange}
+              disabled={inverted}
+            />
+          </div>
+          <div>
+            <label htmlFor="hours">Hours</label>
+            <input
+              id="hours"
+              value={inverted ? amount : (amount / 60).toFixed(1)}
+              placeholder="Hours"
+              type="number"
+              onChange={onChange}
+              disabled={!inverted}
+            />
+          </div>
+          <button onClick={reset}>RESET</button>
+          <button onClick={onInvert}>
+            {inverted ? "Turn Back" : "Invert"}
+          </button>
+        </div>
+      );
+    }
+    function KmToMiles() {
+      const [amount, setAmount] = React.useState(0);
+      const [inverted, setInverted] = React.useState(false);
+
+      const onChange = (event) => {
+        setAmount(event.target.value);
+      };
+
+      const reset = () => {
+        setAmount(0);
+      };
+
+      const onInvert = () => {
+        reset();
+        setInverted((current) => !current);
+      };
+
+      return (
+        <div>
+          <div>
+            <label htmlFor="km">Km</label>
+            <input
+              id="km"
+              value={inverted ? amount / 0.621371 : amount}
+              type="number"
+              placeholder="Km"
+              onChange={onChange}
+              disabled={inverted}
+            />
+          </div>
+          <div>
+            <label htmlFor="miles">Miles</label>
+            <input
+              id="miles"
+              value={inverted ? amount : amount * 0.621371}
+              type="number"
+              placeholder="Miles"
+              onChange={onChange}
+              disabled={!inverted}
+            />
+          </div>
+          <button onClick={reset}>RESET</button>
+          <button onClick={onInvert}>
+            {inverted ? "Turn Back" : "Invert"}
+          </button>
+        </div>
+      );
+    }
+
+    function App() {
+      const [index, setIndex] = React.useState("xx");
+
+      const onSelect = (event) => {
+        setIndex(event.target.value);
+      };
+
+      // console.log("render with", index);
+
+      return (
+        <div>
+          <h1>Super Converter</h1>
+          <select value={index} onChange={onSelect}>
+            <option value="xx">Select your units</option>
+            <option value="0">Minutes & Hours</option>
+            <option value="1">Km & Miles</option>
+          </select>
+          <hr />
+          {index === "xx" && "Please select yout units"}
+          {index === "0" && <MinutesToHours />}
+          {index === "1" && <KmToMiles />}
+        </div>
+      );
+    }
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+  </script>
+</html>
