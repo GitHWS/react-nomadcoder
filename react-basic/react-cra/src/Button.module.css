@@ -1,0 +1,11 @@
+/* Normal CSS */
+button {
+  color: white;
+  background-color: tomato;
+}
+
+/* CSS Module */
+.btn {
+  color: white;
+  background-color: tomato;
+}
